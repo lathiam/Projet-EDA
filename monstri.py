@@ -1,70 +1,73 @@
-import pandas as pd 
-import numpy as np 
-import streamlit as st 
-import seaborn as sns 
+import pandas as pd
+import streamlit as st
+import seaborn as sns
 import matplotlib.pyplot as plt
-import plotly.express as px
+import io
 
+# Fonction pour charger les données
+def load_data():
+    try:
+        return pd.read_csv('bank.csv')
+    except FileNotFoundError:
+        st.error("Le fichier 'bank.csv' est introuvable. Assurez-vous qu'il est dans le même répertoire que ce script.")
+        st.stop()
 
-df = pd.read_csv('bank.csv')
-
-
-st.sidebar.title("Sommaire")
-
-pages = ["Contexte du projet", "Exploration des données", "Analyse de données"]
-
-page = st.sidebar.radio("Aller vers la page :", pages)
-
-if page == pages[0] : 
-    
-    st.write("### Contexte du projet")
-    
-    st.write("Ce projet s'inscrit dans un contexte de campagne marketing dans le secteur bancaire. L'objectif est d'explorer er analyser les données afin de decrire leurs comportements à partir de leurs données clients ainsi que d'autres données leurs caracterisant.Nous avons à notre disposition le fichier bank.csv qui contient des données clients. Chaque observation en ligne correspond à un client. Chaque variable en colonne est une caractéristique decrivant le client ainsi que ces activitées dans notre banque.Dans un premier temps, nous explorerons ce dataset. Puis nous l'analyserons visuellement pour en extraire des informations selon certains axes d'étude. Pour en tirer des conclusions qui vont nous permettre de mieux ciblé nos client lors de nos campagne marketing.")
-
+# Fonction pour afficher le contexte du projet
+def show_context():
+    st.title("Contexte du Projet")
+    st.write(
+        """
+        Ce projet explore des données issues d'une campagne marketing bancaire.
+        L'objectif est d'analyser les comportements des clients afin d'améliorer le ciblage marketing.
+        """
+    )
     st.image("campagne-marketing-banque.jpg")
-    
-elif page == pages[1]:
-    st.write("### Exploration des données")
-    
+
+# Fonction pour explorer les données
+def explore_data(df):
+    st.title("Exploration des Données")
+    st.write("### Aperçu du dataset")
     st.dataframe(df.head())
     
-    st.write("Les informations sur notre dataset:")
+    st.write("### Informations générales")
+    buffer = io.StringIO()
+    df.info(buf=buffer)
+    st.text(buffer.getvalue())
     
-    st.write(df.info())
+    if st.checkbox("Afficher les valeurs manquantes"):
+        st.write(df.isna().sum())
     
-    if st.checkbox("Afficher les valeurs manquantes") : 
-        st.dataframe(df.isna().sum())
-        
-    if st.checkbox("Afficher les doublons") : 
-        st.write(df.duplicated().sum())
-        
-elif page == pages[2]:
-    st.write("### Analyse de données")
-    st.checkbox("Les statistiques descriptives de la variable age")
-    st.write(df['age'].describe())
-    fig = sns.displot(x='age', data=df, kde=True)
-    plt.title("Distribution de la variable age")
-    st.pyplot(fig)
-    
-    fig = sns.boxplot(x='age', data=df)
-    plt.title("boxplot de la variable age")
-    st.pyplot(fig)
-    
-    
-    st.checkbox("Observation lors de l'analyse de la variable age de nos clients")
-    st.write("- L'âge minimum de nos clients est de 18 ans")
-    st.write("- L'âge maximum de nos clients est de 95 ans")
-    st.write("- L'âge moyen des clients est de 41 ans")
-    st.write("- 50% de nos clients ont moins de 39 ans inclu et 75% de nos clients ont moins de 49 ans inclu")
+    if st.checkbox("Afficher les doublons"):
+        st.write(f"Nombre de doublons : {df.duplicated().sum()}")
 
-    st.checkbox("Analyse de la variable job")
-    st.write(df['job'].value_counts())
-    fig = sns.countplot(x='job', data=df)
-    plt.title("Distribution de la variable job")
-    st.pyplot(fig)
+# Fonction pour analyser les données
+def analyze_data(df):
+    st.title("Analyse des Données")
     
-    st.checkbox("Observation lors de l'analyse de la variable job de nos clients")
-    st.write("- Les clients les plus representés sont les clients qui sont le management")
-    st.write("- Les clients les plus representés sont les clients dont nous ne connaissons pas le métier")
+    if st.checkbox("Statistiques descriptives de l'âge"):
+        st.write(df['age'].describe())
+        
+        fig, ax = plt.subplots()
+        sns.histplot(df['age'], kde=True, ax=ax)
+        ax.set_title("Distribution de l'âge")
+        st.pyplot(fig)
     
+    if st.checkbox("Analyse de la variable 'job'"):
+        job_counts = df['job'].value_counts()
+        st.write(job_counts)
+        
+        fig, ax = plt.subplots()
+        sns.barplot(x=job_counts.index, y=job_counts.values, ax=ax)
+        ax.set_title("Distribution des métiers")
+        ax.set_xlabel("Métier")
+        ax.set_ylabel("Nombre de clients")
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
 
+# Interface Streamlit
+st.sidebar.title("Navigation")
+pages = {"Contexte": show_context, "Exploration": explore_data, "Analyse": analyze_data}
+choix = st.sidebar.radio("Aller vers :", list(pages.keys()))
+
+df = load_data()
+pages[choix](df)
