@@ -17,14 +17,30 @@ def show_context():
     st.title("Contexte du Projet")
     st.write(
         """
-        Ce projet explore des données issues d'une campagne marketing bancaire.
-        L'objectif est d'analyser les comportements des clients afin d'améliorer le ciblage marketing.
+        Ce projet s'inscrit dans un contexte de campagne marketing dans le secteur bancaire.
+        Les banques lancent régulièrement des campagnes pour promouvoir leurs produits auprès de clients potentiels.
+        
+        L'objectif principal de ce projet est d'explorer et d'analyser les données clients afin de mieux comprendre
+        leur comportement et leurs préférences. Grâce à cette analyse, nous pourrons identifier des tendances et des
+        profils types permettant d'optimiser le ciblage marketing.
+        
+        Nous utilisons un dataset intitulé `bank.csv` qui contient diverses informations sur les clients : 
+        données démographiques, profession, statut marital, historique bancaire, etc. L'analyse de ces données
+        nous aidera à répondre aux questions suivantes :
+        
+        - Quels sont les profils des clients les plus susceptibles d'accepter une offre ?
+        - Quels facteurs influencent leur décision ?
+        - Quelles sont les tendances générales observées ?
+        
+        En combinant exploration des données et visualisation, nous pourrons extraire des insights utiles à l'amélioration
+        des stratégies marketing.
         """
     )
     st.image("campagne-marketing-banque.jpg")
 
 # Fonction pour explorer les données
-def explore_data(df):
+def explore_data():
+    df = load_data()
     st.title("Exploration des Données")
     st.write("### Aperçu du dataset")
     st.dataframe(df.head())
@@ -47,7 +63,8 @@ def explore_data(df):
     st.write(f"Variables catégoriques : {categorical_cols}")
 
 # Fonction pour analyser les données
-def analyze_data(df):
+def analyze_data():
+    df = load_data()
     st.title("Analyse des Données")
     
     st.subheader("Analyse Univariée")
@@ -79,10 +96,25 @@ def analyze_data(df):
         plt.xticks(rotation=45)
         st.pyplot(fig)
 
+# Fonction pour afficher la conclusion
+def show_conclusion():
+    st.title("Conclusion")
+    st.write(
+        """
+        Grâce à cette analyse, nous avons pu mieux comprendre le profil des clients et leurs comportements. 
+        L'exploration des variables a permis d'identifier des tendances clés qui aideront à affiner les campagnes marketing.
+        
+        - L'analyse univariée a mis en évidence des tendances démographiques et des distributions intéressantes.
+        - L'analyse bivariée a révélé des corrélations entre certaines caractéristiques.
+        - L'étude des variables catégoriques a permis d'identifier les segments clients les plus représentés.
+        
+        Ces insights pourront être utilisés pour optimiser les futures stratégies marketing et améliorer le ciblage des offres bancaires.
+        """
+    )
+
 # Interface Streamlit
 st.sidebar.title("Navigation")
-pages = {"Contexte": show_context, "Exploration": explore_data, "Analyse": analyze_data}
+pages = {"Contexte": show_context, "Exploration": explore_data, "Analyse": analyze_data, "Conclusion": show_conclusion}
 choix = st.sidebar.radio("Aller vers :", list(pages.keys()))
 
-df = load_data()
-pages[choix](df)
+pages[choix]()
