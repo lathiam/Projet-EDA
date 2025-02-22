@@ -39,28 +39,43 @@ def explore_data(df):
     
     if st.checkbox("Afficher les doublons"):
         st.write(f"Nombre de doublons : {df.duplicated().sum()}")
+    
+    st.write("### Types de variables")
+    numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+    categorical_cols = df.select_dtypes(exclude=['number']).columns.tolist()
+    st.write(f"Variables numériques : {numeric_cols}")
+    st.write(f"Variables catégoriques : {categorical_cols}")
 
 # Fonction pour analyser les données
 def analyze_data(df):
     st.title("Analyse des Données")
     
-    if st.checkbox("Statistiques descriptives de l'âge"):
-        st.write(df['age'].describe())
-        
+    st.subheader("Analyse Univariée")
+    variable_uni = st.selectbox("Choisissez une variable numérique :", df.select_dtypes(include=['number']).columns)
+    if st.button("Afficher l'analyse univariée"):
+        st.write(df[variable_uni].describe())
         fig, ax = plt.subplots()
-        sns.histplot(df['age'], kde=True, ax=ax)
-        ax.set_title("Distribution de l'âge")
+        sns.histplot(df[variable_uni], kde=True, ax=ax)
+        ax.set_title(f"Distribution de {variable_uni}")
         st.pyplot(fig)
     
-    if st.checkbox("Analyse de la variable 'job'"):
-        job_counts = df['job'].value_counts()
-        st.write(job_counts)
-        
+    st.subheader("Analyse Bivariée")
+    col_x = st.selectbox("Choisissez une variable numérique (axe X) :", df.select_dtypes(include=['number']).columns)
+    col_y = st.selectbox("Choisissez une autre variable numérique (axe Y) :", df.select_dtypes(include=['number']).columns)
+    if st.button("Afficher l'analyse bivariée"):
         fig, ax = plt.subplots()
-        sns.barplot(x=job_counts.index, y=job_counts.values, ax=ax)
-        ax.set_title("Distribution des métiers")
-        ax.set_xlabel("Métier")
-        ax.set_ylabel("Nombre de clients")
+        sns.scatterplot(x=df[col_x], y=df[col_y], ax=ax)
+        ax.set_title(f"Relation entre {col_x} et {col_y}")
+        st.pyplot(fig)
+    
+    st.subheader("Analyse des Variables Catégoriques")
+    variable_cat = st.selectbox("Choisissez une variable catégorique :", df.select_dtypes(exclude=['number']).columns)
+    if st.button("Afficher l'analyse des variables catégoriques"):
+        count_data = df[variable_cat].value_counts()
+        st.write(count_data)
+        fig, ax = plt.subplots()
+        sns.barplot(x=count_data.index, y=count_data.values, ax=ax)
+        ax.set_title(f"Distribution de {variable_cat}")
         plt.xticks(rotation=45)
         st.pyplot(fig)
 
