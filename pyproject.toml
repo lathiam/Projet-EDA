@@ -2,19 +2,13 @@
 name = "les datasets"
 version = "0.1.0"
 description = ""
-authors = ["None"]
+authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-streamlit = "^1.41.1"
-pandas = "^2.2.3"
-numpy = "^2.2.1"
-matplotlib = "^3.10.0"
-seaborn = "^0.13.2"
-plotly = "^5.24.1"
-scikit-learn = "^1.6.0"
-plotly-express = "^0.4.1"
+python = "^3.12"
+numpy = "^2.2.3"
+scikit-learn = "^1.6.1"
 
 
 [build-system]
