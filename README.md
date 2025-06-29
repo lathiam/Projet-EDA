@@ -1,11 +1,31 @@
-# Projet-EDA
+# 📊 Projet EDA – Analyse de Données Bancaires
 
-Ce projet s'inscrit dans un contexte de campagne marketing dans le secteur bancaire.
-        L'objectif est d'explorer et analyser les données afin de décrire leurs comportements à partir de leurs données clients 
-        ainsi que d'autres données les caractérisant. Nous avons à notre disposition le fichier `bank.csv` qui contient des données clients.
+## 📝 Contexte
 
-        Chaque observation en ligne correspond à un client. Chaque variable en colonne est une caractéristique décrivant le client ainsi 
-        que ses activités dans notre banque.
+Ce projet s'inscrit dans une **campagne marketing** pour une institution bancaire. L’objectif principal est d’**explorer et analyser un ensemble de données clients** afin de mieux comprendre leurs comportements et caractéristiques. Cela permettra d'orienter les futures campagnes de manière plus ciblée et efficace.
 
-        Dans un premier temps, nous explorerons ce dataset. Puis nous l'analyserons visuellement pour en extraire des informations selon certains axes d'étude. 
-        Pour en tirer des conclusions qui vont nous permettre de mieux cibler nos clients lors de nos campagnes marketing.
+## 📁 Jeu de données
+
+Le fichier utilisé est : `bank.csv`
+
+- Chaque **ligne** représente un client unique.
+- Chaque **colonne** correspond à une variable descriptive du client ou de ses interactions avec la banque.
+
+## 🎯 Objectifs
+
+1. **Exploration des données** (`Exploratory Data Analysis`, ou EDA) pour comprendre la structure du dataset, identifier les types de variables, détecter les valeurs manquantes, etc.
+2. **Visualisation des données** à travers des graphiques afin de dégager des tendances ou des comportements notables.
+3. **Analyse selon différents axes d'étude**, tels que :
+   - Âge, statut marital, profession
+   - Historique de contact
+   - Résultats des campagnes précédentes
+4. **Tirer des conclusions** sur les segments de clients les plus réceptifs aux offres de la banque.
+
+## 🔧 Outils et bibliothèques
+
+Le projet utilise les outils suivants :
+
+- Python (version ≥ 3.8)
+- Pandas
+- Matplotlib / Seaborn
+- Jupyter Notebook
